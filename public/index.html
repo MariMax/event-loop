@@ -5,104 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      background-image: linear-gradient(#e66465, #9198e5);
-    }
-
-    .svg {
-      display: flex;
-      justify-content: center;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    svg {
-      min-width: 100%;
-      height: 100vh;
-    }
-
-    circle,
-    path {
-      stroke-width: 10;
-      fill: none;
-      stroke: rgba(255, 255, 255, .4)
-    }
-
-    .raf {
-      stroke: yellow;
-    }
-
-    .stl,
-    .layout {
-      stroke: blue;
-    }
-
-    .painting {
-      stroke: lime;
-    }
-
-    .task {
-      stroke: orange;
-      transition: transform .1s linear;
-    }
-
-    .fill-left-top,
-    .fill-left-bottom,
-    .fill-right-top,
-    .fill-right-bottom {
-      stroke-width: 0;
-      fill: rgba(255, 255, 255, .4);
-    }
-
-    .loop {
-      stroke-width: 0;
-      fill: rgba(255, 255, 255, 1);
-      position: relative;
-    }
-
-    .gate-right,
-    .gate-left {
-      fill: none;
-      stroke-width: 1;
-      stroke: white;
-      transform-origin: 50% 50%;
-      transition: transform .1s linear
-    }
-
-    .gate-right {
-      transform: translate(-22px, -15px) rotate(35deg)
-    }
-
-    .gate-right.open {
-      transform: translate(0, 0) rotate(0deg)
-    }
-
-    .gate-left {
-      transform: translate(22px, 15px) rotate(35deg)
-    }
-    .gate-left.open {
-      transform: translate(0, 0) rotate(0deg)
-    }
-    .active {
-      transform: translateX(15px);
-    }
-
-  </style>
+  <title>Event loop</title>
+  <link rel="stylesheet" href="/styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"
     defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js" defer></script>
@@ -119,12 +23,14 @@
         <path d="M180 110 A 40 40, 0, 1, 1, 180 190" class="right-arc" />
 
         <path d="M195 113 A 40 40, 0, 0, 1, 209.5 123" class="raf" />
+        <text x="198" y="120" class="raf-text">rAF</text>
         <path d="M211.3 125 A 40 40, 0, 0, 1, 218.9 140" class="stl" />
+        <text x="214" y="134" class="stl-text">S</text>
         <path d="M219.5 143 A 40 40, 0, 0, 1, 218.7 160" class="layout" />
+        <text x="219" y="153" class="layout-text">L</text>
         <path d="M218 162.5 A 40 40, 0, 0, 1, 208 178.7" class="painting" />
+        <text x="213" y="173" class="painting-text">P</text>
 
-
-        <!-- <path d="M81 140 A 40 40, 0, 0, 0, 81 160" class="task" /> -->
         <path d="M119.98 114.9 l 0 -9.9 l 30 0 A 41.7 37, 0, 0, 0, 121.9 114.9" class="fill-left-top"
         />
         <path d="M180 114.9 l 0 -9.9 l -30 0 A 41.7 37, 0, 0, 1, 178.1 114.9" class="fill-right-top"

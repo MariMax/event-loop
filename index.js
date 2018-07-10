@@ -4,7 +4,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 app.use(express.static('public'))
 
-server.listen(process.env.PORT || 5000);
+server.listen(process.env.PORT || 3000);
 
 let activeTasks = 0;
 let left;
@@ -14,6 +14,10 @@ io.on('connection', (socket) => {
   socket.emit('HEY', {activeTasks, left, right});
 
   socket.on('ADD_TASK', () => {
+    if (activeTasks > 5) {
+      activeTasks = 5;
+      return;
+    }
     activeTasks++;
     socket.broadcast.emit('ADD_TASK');
     socket.emit('ADD_TASK');

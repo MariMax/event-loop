@@ -10,7 +10,7 @@ socket.on('HEY', (data) => {
   for (let i = 0; i < data.activeTasks; i++) {
     addTask();
   }
-  if(data.left) left.classList.add('open');
+  if(data.activeTasks > 0) left.classList.add('open');
   if(data.right) right.classList.add('open');
   console.log('hey');
 });
@@ -32,7 +32,8 @@ const rightP = {
 };
 
 function addTask() {
-  //<path d="M81 140 A 40 40, 0, 0, 0, 81 160" class="task" />
+  if (activeTasks.length > 5) return;
+  
   const svg = document.querySelector('svg');
   const newElement = document.createElementNS(
     'http://www.w3.org/2000/svg',
