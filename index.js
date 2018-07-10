@@ -4,7 +4,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 app.use(express.static('public'))
 
-server.listen(3000);
+server.listen(process.env.NODE_ENV === 'producation' ? process.env.PORT : 3000);
 
 let activeTasks = 0;
 let left;
