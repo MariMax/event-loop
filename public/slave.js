@@ -6,15 +6,14 @@ let gateClosed = false;
 let taskClosed = false;
 
 const socket = io.connect('/');
-socket.on('HEY', (data) => {
+socket.on('HEY', data => {
   for (let i = 0; i < data.activeTasks; i++) {
     addTask();
   }
-  if(data.left) left.classList.add('open');
-  if(data.right) right.classList.add('open');
+  if (data.left) left.classList.add('open');
+  if (data.right) right.classList.add('open');
   console.log('hey');
 });
-
 
 const loopR = {
   y: 80,
@@ -48,39 +47,35 @@ function addTask() {
     newElement.classList.add('active');
   }
   svg.appendChild(newElement);
-  activeTasks.unshift({task: newElement, number: activeTasks.length, translate: 0});
+  activeTasks.unshift({
+    task: newElement,
+    number: activeTasks.length,
+    translate: 0,
+  });
 }
 
 socket.on('ADD_TASK', () => {
   addTask();
-});
-
-socket.on('CLOSE_LEFT', () => {
-  left.classList.remove('open');
-});
-
-socket.on('OPEN_LEFT', () => {
-  left.classList.add('open');
-});
-
-socket.on('CLOSE_RIGHT', () => {
-  right.classList.remove('open');
+  if (activeTasks.length > 0) left.classList.add('open');
 });
 
 socket.on('OPEN_RIGHT', () => {
   right.classList.add('open');
 });
 
-socket.on('COMPLETE_TASK', () => {
+const completeTask = () => {
+  if (activeTasks.length === 0) return;
   const lasTast = activeTasks.pop();
   lasTast.task.parentNode.removeChild(lasTast.task);
-  if (activeTasks.length === 0) socket.emit('CLOSE_LEFT');
+  if (activeTasks.length === 0) left.classList.remove('open');
   activeTasks.forEach((i, index) => {
     i.number--;
-    i.translate +=25;
-    i.task.style.transform = `translateY(${i.translate}px) translateX(${index === activeTasks.length - 1 ? '15px' : '0' })`;
+    i.translate += 25;
+    i.task.style.transform = `translateY(${i.translate}px) translateX(${
+      index === activeTasks.length - 1 ? '15px' : '0'
+    })`;
   });
-});
+};
 
 function rotateLoop() {
   let route = right.classList.contains('open') ? rightP : loopR;
@@ -108,10 +103,10 @@ function rotateLoop() {
           x: 30 + 40 * Math.cos((x / 2) * Math.PI * 2 - Math.PI / 2),
           y: 40 * Math.sin((x / 2) * Math.PI * 2 - Math.PI / 2) + 40,
         };
-        if (progress > .5 && !gateClosed) {
+        if (progress > 0.5 && !gateClosed) {
           gateClosed = true;
-        } 
-
+          right.classList.remove('open');
+        }
       }
       if (route === rightP && progress < 0.17) {
         const x = progress / 0.17;
@@ -128,9 +123,10 @@ function rotateLoop() {
           x: -30 + 40 * Math.cos((x / 2) * Math.PI * 2 + Math.PI / 2),
           y: 40 * Math.sin((x / 2) * Math.PI * 2 + Math.PI / 2) + 40,
         };
-        if (progress > .5 && !taskClosed) {
+        if (progress > 0.5 && !taskClosed) {
           taskClosed = true;
-        } 
+          completeTask();
+        }
       }
       if (route === taskP && progress < 0.17) {
         const x = progress / 0.17;
